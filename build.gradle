@@ -830,7 +830,10 @@ if (usesShadowedDependencies.toBoolean()) {
                 project.configurations.shadowImplementation,
                 project.configurations.shadowCompile
         ]
-        archiveClassifier.set('dev')
+        // When modern syntax downgrading is enabled, shadeDowngradedApi produces the final dev jar.
+        // Keep shadowJar as an intermediate artifact to avoid both tasks writing the same output file.
+        // This fixes gradle UP-TO-DATE detection
+        archiveClassifier.set(enableModernJavaSyntax.toBoolean() ? 'dev-shadow' : 'dev')
         if (relocateShadowedDependencies.toBoolean()) {
             relocationPrefix = modGroup + '.shadow'
             enableRelocation = true

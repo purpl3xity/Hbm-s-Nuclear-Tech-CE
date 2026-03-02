@@ -48,6 +48,7 @@ jobs:
           path: |
             build/libs/**
             !build/libs/**/*-downgraded.jar
+            !build/libs/**/*-dev-shadow.jar
           if-no-files-found: error
 
       - name: Run server
