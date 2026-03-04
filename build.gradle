@@ -796,22 +796,45 @@ if (separateRunDirectories.toBoolean()) {
 }
 
 // Create API library jar
-tasks.register('apiJar', Jar) {
-    archiveClassifier.set 'api'
-    if (useSrcApiPath.toBoolean()) {
-        from(sourceSets.api.java) {
+def apiJavaSources = useSrcApiPath.toBoolean() ? sourceSets.api.java : sourceSets.main.java
+def apiClassOutput = useSrcApiPath.toBoolean() ? sourceSets.api.output : sourceSets.main.output
+
+if (enableModernJavaSyntax.toBoolean()) {
+    tasks.register('apiJarJava25', Jar) {
+        archiveClassifier.set('api-java25')
+        from(apiJavaSources) {
             include "${modGroupPath}/${apiPackagePath}/**"
         }
-        from(sourceSets.api.output) {
+        from(apiClassOutput) {
+            include "${modGroupPath}/${apiPackagePath}/**"
+        }
+    }
+}
+
+tasks.register('apiJar', Jar) {
+    archiveClassifier.set('api')
+    from(apiJavaSources) {
+        include "${modGroupPath}/${apiPackagePath}/**"
+    }
+    if (enableModernJavaSyntax.toBoolean()) {
+        dependsOn('shadeDowngradedApi')
+        from(provider {
+            zipTree(tasks.named('shadeDowngradedApi', Jar).get().archiveFile.get().asFile)
+        }) {
             include "${modGroupPath}/${apiPackagePath}/**"
         }
     } else {
-        from(sourceSets.main.java) {
+        from(apiClassOutput) {
             include "${modGroupPath}/${apiPackagePath}/**"
         }
+    }
+}
 
-        from(sourceSets.main.output) {
-            include "${modGroupPath}/${apiPackagePath}/**"
+if (apiPackage) {
+    tasks.named('build').configure {
+        dependsOn('apiJar')
+        if (enableModernJavaSyntax.toBoolean()) {
+            dependsOn('apiJarJava25')
         }
     }
 }
@@ -851,7 +874,7 @@ if (usesShadowedDependencies.toBoolean()) {
         finalizedBy(tasks.shadowJar)
     }
     tasks.named('reobfJar', ReobfuscatedJar) {
-        inputJar.set(tasks.named('shadowJar', ShadowJar).flatMap({it.archiveFile}))
+        inputJar.set(publishedDevTask.flatMap({it.archiveFile}))
     }
     AdhocComponentWithVariants javaComponent = (AdhocComponentWithVariants) project.components.findByName('java')
     javaComponent.withVariantsFromConfiguration(configurations.shadowRuntimeElements) {
@@ -1190,6 +1213,9 @@ if (isCIEnv || deploymentDebug.toBoolean()) {
         }
         if (apiPackage) {
             archives apiJar
+            if (enableModernJavaSyntax.toBoolean()) {
+                archives apiJarJava25
+            }
         }
     }
 }
@@ -1376,6 +1402,9 @@ if (customMavenPublishUrl) {
 
                     if (apiPackage) {
                         artifact apiJar
+                        if (enableModernJavaSyntax.toBoolean()) {
+                            artifact apiJarJava25
+                        }
                     }
                     artifact(java25DevJarTask)
                     artifact(java25ReobfJarTask)
