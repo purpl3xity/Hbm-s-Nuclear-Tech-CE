@@ -57,10 +57,4 @@ public class RadioTorchReceiver extends RadioTorchRWBase {
 
         return 0;
     }
-
-    @Override
-    public int getStrongPower(IBlockState state, @NotNull IBlockAccess world, @NotNull BlockPos pos, @NotNull EnumFacing side) {
-        if (side == state.getValue(FACING).getOpposite()) return getWeakPower(state, world, pos, side);
-        return 0;
-    }
 }
