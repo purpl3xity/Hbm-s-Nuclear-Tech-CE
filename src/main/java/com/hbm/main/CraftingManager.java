@@ -454,9 +454,8 @@ public class CraftingManager {
 		addRecipeAuto(new ItemStack(Item.getItemFromBlock(ModBlocks.reinforced_brick), 4), "FBF", "BFB", "FBF", 'F', Blocks.IRON_BARS, 'B', ModBlocks.brick_concrete );
 		addRecipeAuto(new ItemStack(Item.getItemFromBlock(ModBlocks.brick_compound), 4), "FBF", "BTB", "FBF", 'F', STEEL.bolt(), 'B', ModBlocks.reinforced_brick, 'T', ANY_TAR.any() );
 		addRecipeAuto(new ItemStack(Item.getItemFromBlock(ModBlocks.reinforced_glass), 4), "FBF", "BFB", "FBF", 'F', Blocks.IRON_BARS, 'B', Blocks.GLASS );
-		// TODO: wtf laminate?
-		/*addRecipeAuto(new ItemStack(Item.getItemFromBlock(ModBlocks.reinforced_glass_pane), 16), "   ", "GGG", "GGG", 'G', ModBlocks.reinforced_glass);
-		addRecipeAuto(new ItemStack(Item.getItemFromBlock(ModBlocks.reinforced_laminate_pane), 16), "   ", "LLL", "LLL", 'L', ModBlocks.reinforced_laminate);*/
+		addRecipeAuto(new ItemStack(Item.getItemFromBlock(ModBlocks.reinforced_glass_pane), 16), "   ", "GGG", "GGG", 'G', ModBlocks.reinforced_glass);
+		addRecipeAuto(new ItemStack(Item.getItemFromBlock(ModBlocks.reinforced_laminate_pane), 16), "   ", "LLL", "LLL", 'L', ModBlocks.reinforced_laminate);
 		addRecipeAuto(new ItemStack(Item.getItemFromBlock(ModBlocks.reinforced_light), 1), "FFF", "FBF", "FFF", 'F', Blocks.IRON_BARS, 'B', Blocks.GLOWSTONE );
 		addRecipeAuto(new ItemStack(Item.getItemFromBlock(ModBlocks.reinforced_lamp_off), 1), "FFF", "FBF", "FFF", 'F', Blocks.IRON_BARS, 'B', Blocks.REDSTONE_LAMP );
 		addRecipeAuto(new ItemStack(Item.getItemFromBlock(ModBlocks.reinforced_sand), 4), "FBF", "BFB", "FBF", 'F', Blocks.IRON_BARS, 'B', Blocks.SANDSTONE );
